@@ -814,3 +814,65 @@ section {
     width: 25%;
   }
 }
+
+/* ============================================================
+   FIX MOBILE — TABELLA MANI DEL REGOLAMENTO
+   ============================================================ */
+
+.card-regolamento .tab-mini {
+  width: 100% !important;
+  max-width: 420px !important;
+  table-layout: fixed !important;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+/* Colonna Turno */
+.card-regolamento .tab-mini th:first-child,
+.card-regolamento .tab-mini td:first-child {
+  width: 78% !important;
+  text-align: left !important;
+  padding: 0.65rem 0.5rem !important;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Colonna Mani */
+.card-regolamento .tab-mini th:last-child,
+.card-regolamento .tab-mini td:last-child {
+  width: 22% !important;
+  text-align: center !important;
+  padding: 0.65rem 0.35rem !important;
+  white-space: nowrap;
+}
+
+/* Intestazioni */
+.card-regolamento .tab-mini th {
+  color: var(--oro);
+  font-size: 0.8rem;
+}
+
+/* Smartphone */
+@media (max-width: 600px) {
+  .card-regolamento .tab-mini {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  .card-regolamento .tab-mini th,
+  .card-regolamento .tab-mini td {
+    font-size: 0.85rem !important;
+    line-height: 1.5;
+  }
+
+  .card-regolamento .tab-mini th:first-child,
+  .card-regolamento .tab-mini td:first-child {
+    width: 78% !important;
+  }
+
+  .card-regolamento .tab-mini th:last-child,
+  .card-regolamento .tab-mini td:last-child {
+    width: 22% !important;
+  }
+}
