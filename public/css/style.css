@@ -573,3 +573,244 @@ tr.eliminata { opacity: .5; }
     font-size: 0.78rem;
   }
 }
+
+/* ============================================================
+   OTTIMIZZAZIONE SMARTPHONE
+   Briscol Champions Cup
+   ============================================================ */
+
+/* Evita che padding e bordi aumentino le dimensioni */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Immagini ed elementi multimediali */
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+/* Contenitori principali */
+.container {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Le sezioni non devono allargare la pagina */
+section {
+  min-width: 0;
+}
+
+/* ============================================================
+   TABELLE DEL REGOLAMENTO
+   ============================================================ */
+
+/* Le tabelle si adattano allo spazio disponibile */
+.card-regolamento table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Il testo delle celle va a capo */
+.card-regolamento th,
+.card-regolamento td {
+  min-width: 0;
+  padding: 0.55rem 0.45rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+/* Tabelle con la classe tab-mini */
+.card-regolamento .tab-mini {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+/* ============================================================
+   REGOLAMENTO: TESTI E LISTE
+   ============================================================ */
+
+.card-regolamento {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.card-regolamento p,
+.card-regolamento li {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+
+.card-regolamento ul,
+.card-regolamento ol {
+  padding-left: 1.2rem;
+}
+
+/* Codice o stringhe particolarmente lunghe */
+.card-regolamento code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ============================================================
+   SMARTPHONE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  /* Contenuto più vicino ai bordi, senza uscire dallo schermo */
+  .container {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  section {
+    padding: 1.5rem 0;
+  }
+
+  h1 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    line-height: 1.35;
+  }
+
+  h3 {
+    overflow-wrap: anywhere;
+  }
+
+  /* Card del regolamento più compatte */
+  .card-regolamento {
+    padding: 1rem 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+  }
+
+  .card-regolamento h2 {
+    font-size: 1.05rem;
+  }
+
+  .card-regolamento p,
+  .card-regolamento li {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  /* Tabelle del regolamento */
+  .card-regolamento th,
+  .card-regolamento td {
+    padding: 0.45rem 0.3rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  /* Tabelle piccole: descrizione + valore */
+  .card-regolamento .tab-mini th:first-child,
+  .card-regolamento .tab-mini td:first-child {
+    width: 78%;
+  }
+
+  .card-regolamento .tab-mini th:last-child,
+  .card-regolamento .tab-mini td:last-child {
+    width: 22%;
+  }
+
+  /* Classifica: mantiene le colonne leggibili */
+  .card-tabella {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabella {
+    min-width: 640px;
+  }
+
+  /* Partite: disposizione verticale */
+  .partita {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+    padding: 0.9rem;
+  }
+
+  .risultato {
+    min-width: 0;
+  }
+
+  /* Carte delle coppie */
+  .griglia-coppie {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Tabellone: scorrimento interno */
+  .tabellone {
+    grid-template-columns: repeat(5, minmax(190px, 1fr));
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Pulsanti più facili da toccare */
+  .btn {
+    max-width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+/* Smartphone molto stretti */
+@media (max-width: 360px) {
+
+  .container {
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
+
+  .card-regolamento {
+    padding: 0.8rem 0.6rem;
+  }
+
+  .card-regolamento th,
+  .card-regolamento td {
+    padding: 0.35rem 0.2rem;
+    font-size: 0.72rem;
+  }
+
+  .tab-mini th:first-child,
+  .tab-mini td:first-child {
+    width: 75%;
+  }
+
+  .tab-mini th:last-child,
+  .tab-mini td:last-child {
+    width: 25%;
+  }
+}
