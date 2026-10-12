@@ -72,9 +72,8 @@ header {
   background: linear-gradient(180deg, var(--verde-scuro), transparent);
   border-bottom: 1px solid rgba(212,175,55,.25);
   padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: relative;
+  z-index: 1;
   backdrop-filter: blur(6px);
 }
 
