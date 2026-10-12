@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin — Briscol Champions Cup</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .admin-section { margin-bottom: 2.5rem; }
+    .admin-partita {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+      background: rgba(10,77,53,.4);
+      border: 1px solid rgba(212,175,55,.3);
+      border-radius: var(--raggio);
+      padding: .9rem 1.2rem;
+      margin-bottom: .7rem;
+    }
+    .admin-partita .squadra strong { display: block; font-size: .95rem; }
+    .admin-partita .squadra span { font-size: .72rem; opacity: .6; }
+    .admin-partita .squadra.destra { text-align: right; }
+    .admin-form { display: flex; gap: .4rem; align-items: center; justify-content: center; }
+    .admin-form input {
+      width: 58px;
+      padding: .45rem .3rem;
+      text-align: center;
+      font-size: 1rem;
+      font-family: var(--font-titoli);
+      font-weight: 700;
+      color: var(--oro);
+      background: rgba(4,31,22,.8);
+      border: 1px solid rgba(212,175,55,.4);
+      border-radius: 8px;
+    }
+    .admin-form input:focus { outline: none; border-color: var(--oro); }
+    .admin-form .lbl { font-size: .62rem; text-transform: uppercase; opacity: .6; display: block; text-align: center; }
+    .btn-salva { padding: .45rem 1rem; font-size: .75rem; }
+    .messaggio {
+      padding: .8rem 1.2rem;
+      border-radius: var(--raggio);
+      margin-bottom: 1.2rem;
+      font-size: .88rem;
+    }
+    .messaggio.ok { background: rgba(46,204,113,.15); border: 1px solid #2ecc71; }
+    .messaggio.errore { background: rgba(231,76,60,.15); border: 1px solid #e74c3c; }
+    .badge-dev {
+      display: inline-block; background: rgba(231,76,60,.2); border: 1px solid #e74c3c;
+      color: #ffb3ab; border-radius: 999px; padding: .2rem .9rem; font-size: .72rem;
+      margin-bottom: 1rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    @media (max-width: 640px) { .admin-partita { grid-template-columns: 1fr; text-align: center; } .admin-partita .squadra.destra { text-align: center; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="../index.html" class="logo">Briscol Champions Cup</a>
+      <nav>
+        <ul>
+          <li><a href="index.html" onclick="netlifyIdentity && netlifyIdentity.logout(); return false;">Esci ➜</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 style="margin-bottom: 1.5rem;">Dashboard Admin</h1>
+    <div id="avviso"></div>
+    <div id="contenuto-admin"></div>
+  </main>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="../js/dati.js"></script>
+  <script src="../js/api.js"></script>
+  <script>
+    /* Modalità sviluppo: in locale (file o localhost) salta il login
+       e i salvataggi sono simulati. ONLINE il login è obbligatorio. */
+    const DEV = location.protocol === 'file:' ||
+                ['localhost', '127.0.0.1'].includes(location.hostname);
+
+    let stato = null;
+
+    function avviso(testo, tipo) {
+      document.getElementById('avviso').innerHTML =
+        testo ? `<div class="messaggio ${tipo}">${testo}</div>` : '';
+    }
+
+    async function salvaRisultato(id, payload) {
+      if (DEV) {
+        // Simulazione locale: aggiorno lo stato in memoria e ridisegno
+        const pt = stato.partite_league.find(p => p.id === id);
+        Object.assign(pt, payload, { giocata: true });
+        pt.vincitore = pt.mani_casa > pt.mani_ospite ? pt.casa : pt.ospite;
+        localStorage.setItem('bcc_stato', JSON.stringify(stato));  // ← AGGIUNGI QUESTA
+        avviso('💾 Modalità sviluppo: risultato salvato SOLO in locale (al refresh si perde).', 'ok');
+        disegna();
+        return;
+      }
+      const user = netlifyIdentity.currentUser();
+      if (!user) { window.location.href = 'index.html'; return; }
+      const token = await user.jwt();
+
+      const res = await fetch('/.netlify/functions/save-result', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ id, ...payload })
+      });
+      const dati = await res.json();
+      if (!res.ok) { avviso('❌ ' + dati.errore, 'errore'); return; }
+      stato = dati.stato;
+      avviso('✅ Risultato pubblicato! Il sito si aggiorna entro 30 secondi.', 'ok');
+      disegna();
+    }
+
+    function disegna() {
+      const map = {};
+      stato.coppie.forEach(c => map[c.id] = c);
+      const cont = document.getElementById('contenuto-admin');
+
+      let html = '';
+      for (let g = 1; g <= 8; g++) {
+        const partite = stato.partite_league.filter(p => p.giornata === g);
+        html += `<div class="admin-section"><h2>Giornata ${g}</h2>`;
+        partite.forEach(pt => {
+          const casa = map[pt.casa], osp = map[pt.ospite];
+          const mc = pt.giocata ? pt.mani_casa : '', mo = pt.giocata ? pt.mani_ospite : '';
+          const pc = pt.giocata ? pt.punti_casa : '', po = pt.giocata ? pt.punti_ospite : '';
+          html += `
+          <div class="admin-partita" data-id="${pt.id}">
+            <div class="squadra">
+              <strong>${casa.nome_coppia}</strong>
+              <span>${casa.giocatore1} & ${casa.giocatore2}</span>
+            </div>
+            <form class="admin-form">
+              <div><span class="lbl">Mani</span>
+                <input type="number" name="mani_casa" min="0" max="3" value="${mc}" required>
+                –
+                <input type="number" name="mani_ospite" min="0" max="3" value="${mo}" required>
+              </div>
+              <div><span class="lbl">Punti</span>
+                <input type="number" name="punti_casa" min="0" value="${pc}" required>
+                –
+                <input type="number" name="punti_ospite" min="0" value="${po}" required>
+              </div>
+              <button type="submit" class="btn btn-oro btn-salva">${pt.giocata ? 'Aggiorna' : 'Salva'}</button>
+            </form>
+            <div class="squadra destra">
+              <strong>${osp.nome_coppia}</strong>
+              <span>${osp.giocatore1} & ${osp.giocatore2}</span>
+            </div>
+          </div>`;
+        });
+        html += '</div>';
+      }
+      cont.innerHTML = html;
+
+      cont.querySelectorAll('.admin-partita form').forEach(form => {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const id = form.closest('.admin-partita').dataset.id;
+          const val = n => Number(form.elements[n].value);
+          salvaRisultato(id, {
+            mani_casa: val('mani_casa'), mani_ospite: val('mani_ospite'),
+            punti_casa: val('punti_casa'), punti_ospite: val('punti_ospite')
+          });
+        });
+      });
+    }
+
+    (async function () {
+      if (DEV) {
+        document.getElementById('avviso').innerHTML =
+          '<span class="badge-dev">⚠ Modalità sviluppo — login disattivato, salvataggi simulati</span>';
+      } else {
+        const user = netlifyIdentity.currentUser();
+        if (!user) { window.location.href = 'index.html'; return; }
+      }
+      stato = await API.getState();
+      if (stato) disegna();
+    })();
+  </script>
+</body>
+</html>

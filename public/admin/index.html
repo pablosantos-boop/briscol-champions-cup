@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area Admin — Briscol Champions Cup</title>
+  <meta name="robots" content="noindex"> <!-- Google non deve indicizzare l'admin -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    .login-box {
+      max-width: 420px;
+      margin: 4rem auto;
+      background: linear-gradient(160deg, rgba(10,77,53,.6), rgba(6,46,33,.9));
+      border: 1px solid rgba(212,175,55,.35);
+      border-radius: var(--raggio);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--ombra-carta);
+    }
+    .login-box h1 { font-size: 1.4rem; margin-bottom: .5rem; }
+    .login-box p { font-size: .85rem; opacity: .7; margin-bottom: 1.5rem; }
+    /* Personalizza il widget di Netlify (fondini scuri) */
+    .netlify-identity-widget { color-scheme: dark; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="../index.html" class="logo">Briscol Champions Cup</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="login-box">
+      <h1>Area Riservata</h1>
+      <p>Solo l'organizzazione può entrare qui. I risultati inseriti si aggiornano sul sito in tempo reale.</p>
+
+      <div id="netlify-identity-widget-container"></div>
+      <button class="btn btn-oro" id="btn-login">Accedi come Admin</button>
+    </div>
+  </main>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    netlifyIdentity.on('init', user => {
+      if (user) window.location.href = 'dashboard.html'; // già loggato
+    });
+    netlifyIdentity.on('login', user => {
+      window.location.href = 'dashboard.html';
+    });
+    netlifyIdentity.on('close', () => {
+      if (netlifyIdentity.currentUser()) window.location.href = 'dashboard.html';
+    });
+    document.getElementById('btn-login').addEventListener('click', () => {
+      netlifyIdentity.open('login');
+    });
+  </script>
+</body>
+</html>

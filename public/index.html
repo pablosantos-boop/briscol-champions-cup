@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Briscol Champions Cup — Classifica</title>
+  <meta name="description" content="Il torneo di Briscola Napoletana in stile Champions League. Classifica, risultati e tabellone in tempo reale.">
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Stile -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Stili della splash (temporanei, qui vicini all'animazione) -->
+  <style>
+    /* ===== SPLASH SCREEN ===== */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(ellipse at 50% 40%, #0a4d35 0%, #041f16 75%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity .8s ease;
+    }
+
+    #splash.uscente { opacity: 0; pointer-events: none; }
+
+    .carte-splash {
+      position: absolute;
+      inset: 0;
+    }
+
+    .carta {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 90px;
+      height: 130px;
+      margin: -65px 0 0 -45px;
+      background: linear-gradient(160deg, #fbf6e9 0%, #efe3c4 100%);
+      border-radius: 10px;
+      border: 1px solid #d9c896;
+      box-shadow: 0 10px 30px rgba(0,0,0,.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      color: #1c1c1c;
+      opacity: 0;
+      transform: translate(0, 0) rotate(0deg) scale(.6);
+      transition: transform .9s cubic-bezier(.22,1,.36,1), opacity .5s ease;
+      will-change: transform;
+    }
+
+    .carta.rosso { color: #a4161a; }
+
+    .carta.distribuita { opacity: 1; }
+
+    .titolo-splash {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      opacity: 0;
+      transform: scale(.92);
+      transition: opacity .9s ease .1s, transform .9s cubic-bezier(.22,1,.36,1) .1s;
+      padding: 0 1rem;
+    }
+
+    .titolo-splash.visibile { opacity: 1; transform: scale(1); }
+
+    .titolo-splash h1 {
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      text-shadow: 0 4px 30px rgba(0,0,0,.6);
+      line-height: 1.15;
+    }
+
+    .titolo-splash p {
+      color: var(--crema);
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      font-size: clamp(.7rem, 1.6vw, 1rem);
+      margin-top: .8rem;
+      opacity: .85;
+    }
+
+    .salta-splash {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 3;
+      background: none;
+      border: 1px solid rgba(212,175,55,.5);
+      color: var(--oro-chiaro);
+      border-radius: 999px;
+      padding: .4rem 1.1rem;
+      font-size: .75rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* Linea dorata che "incornicia" il titolo */
+    .titolo-splash h1::after {
+      content: "";
+      display: block;
+      width: 120px;
+      height: 2px;
+      margin: 1rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--oro), transparent);
+    }
+
+    /* Rispetta chi preferisce meno animazioni */
+    @media (prefers-reduced-motion: reduce) {
+      .carta, .titolo-splash { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== SPLASH SCREEN ===== -->
+  <div id="splash" aria-hidden="true">
+    <div class="carte-splash" id="carte-splash">
+      <!-- Le carte vengono generate da splash.js -->
+    </div>
+    <div class="titolo-splash" id="titolo-splash">
+      <h1>Briscol<br>Champions Cup</h1>
+      <p>Il torneo · 2026</p>
+    </div>
+    <button class="salta-splash" id="salta-splash">Salta →</button>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">Briscol Champions Cup</a>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="attivo">Classifica</a></li>
+          <li><a href="partite.html">Partite</a></li>
+          <li><a href="tabellone.html">Tabellone</a></li>
+          <li><a href="coppie.html">Coppie</a></li>
+          <li><a href="regolamento.html">Regolamento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HOME ===== -->
+  <main>
+    <section class="container">
+      <div class="centro" style="margin-bottom: 2rem;">
+        <span class="badge-live" id="badge-live">Aggiornato in tempo reale</span>
+        <h1 style="margin-top: 1rem;">Classifica</h1>
+        <p class="sottotitolo" style="margin: 0 auto;">
+          Fase a campionato — ogni coppia gioca 8 partite.
+          Le prime 16 accedono al tabellone finale.
+        </p>
+      </div>
+
+      <!-- La classifica verrà disegnata qui da render.js (File 4) -->
+      <div id="classifica">
+        <p class="centro" style="opacity:.6; padding: 3rem 0;">
+          🃏 Distribuendo le carte… la classifica arriva al prossimo file.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Briscol Champions Cup · Torneo di Briscola Napoletana · Edizione 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/splash.js"></script>
+    <script src="js/dati.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/render.js"></script>
+  <script>
+    (async function () {
+      const stato = await API.getState();
+      if (stato) {
+        renderClassifica(stato, document.getElementById('classifica'));
+        const ora = new Date();
+        document.getElementById('badge-live').textContent =
+          'Dati live · aggiornato alle ' +
+          ora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      }
+    })();
+  </script>
+</body>
+</html>
