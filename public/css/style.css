@@ -545,31 +545,26 @@ tr.eliminata { opacity: .5; }
 /* --- Tabella regolamento: adattamento smartphone --- */
 @media (max-width: 600px) {
   .tab-mini {
-    width: 100%;
+    width: auto;
     max-width: 100%;
-    table-layout: fixed;
-    margin-left: 0;
-    margin-right: 0;
+    table-layout: auto;
+    margin: 0.8rem 0;
   }
 
   .tab-mini th,
   .tab-mini td {
-    box-sizing: border-box;
-    padding: 0.55rem 0.3rem;
-    font-size: 0.75rem;
-    overflow-wrap: break-word;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
   .tab-mini th:first-child,
   .tab-mini td:first-child {
-    width: 78%;
     text-align: left;
   }
 
   .tab-mini th:last-child,
   .tab-mini td:last-child {
-    width: 22%;
     text-align: center;
-    white-space: normal;
   }
 }
