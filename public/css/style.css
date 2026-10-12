@@ -548,24 +548,28 @@ tr.eliminata { opacity: .5; }
     width: 100%;
     max-width: 100%;
     table-layout: fixed;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .tab-mini th,
   .tab-mini td {
-    padding: 0.55rem 0.4rem;
-    font-size: 0.78rem;
-    overflow-wrap: anywhere;
+    box-sizing: border-box;
+    padding: 0.55rem 0.3rem;
+    font-size: 0.75rem;
+    overflow-wrap: break-word;
   }
 
   .tab-mini th:first-child,
   .tab-mini td:first-child {
-    width: 70%;
+    width: 78%;
     text-align: left;
   }
 
   .tab-mini th:last-child,
   .tab-mini td:last-child {
-    width: 30%;
+    width: 22%;
     text-align: center;
+    white-space: normal;
   }
 }
