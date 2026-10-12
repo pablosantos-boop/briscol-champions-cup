@@ -541,3 +541,31 @@ tr.eliminata { opacity: .5; }
     letter-spacing: 0.06em;
   }
 }
+
+/* --- Tabella regolamento: adattamento smartphone --- */
+@media (max-width: 600px) {
+  .tab-mini {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  .tab-mini th,
+  .tab-mini td {
+    padding: 0.55rem 0.4rem;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+
+  .tab-mini th:first-child,
+  .tab-mini td:first-child {
+    width: 70%;
+    text-align: left;
+  }
+
+  .tab-mini th:last-child,
+  .tab-mini td:last-child {
+    width: 30%;
+    text-align: center;
+  }
+}
