@@ -4,6 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Briscol Champions Cup — Classifica</title>
+
+    <script>
+    (function () {
+      const hash = window.location.hash;
+      if (hash.indexOf('invite_token=') !== -1 ||
+          hash.indexOf('confirmation_token=') !== -1 ||
+          hash.indexOf('recovery_token=') !== -1) {
+        window.location.replace('/admin/' + hash);
+      }
+    })();
+  </script>
+
   <meta name="description" content="Il torneo di Briscola Napoletana in stile Champions League. Classifica, risultati e tabellone in tempo reale.">
 
   <!-- Font -->
