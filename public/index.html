@@ -8,11 +8,15 @@
   <script>
     netlifyIdentity.init();
 
-    // Quando l'utente è loggato (dopo aver completato l'invito o aver fatto login),
-    // chiudi il widget e manda alla dashboard admin.
+    // Se l'utente è appena stato loggato da un invito o login → dashboard
     netlifyIdentity.on('login', () => {
       netlifyIdentity.close();
       window.location.href = '/admin/dashboard.html';
+    });
+
+    // Se è già loggato all'apertura della home → dashboard
+    netlifyIdentity.on('init', (user) => {
+      if (user) window.location.href = '/admin/dashboard.html';
     });
   </script>
   <meta name="description" content="Il torneo di Briscola Napoletana in stile Champions League. Classifica, risultati e tabellone in tempo reale.">
