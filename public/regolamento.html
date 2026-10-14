@@ -2,8 +2,9 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Regolamento — Briscol Champions Cup</title>
+  <meta name="description" content="Regolamento ufficiale del Briscol Champions Cup: formato, sfide, mani e tabellone finale.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,6 +19,7 @@
         <ul>
           <li><a href="index.html">Classifica</a></li>
           <li><a href="partite.html">Partite</a></li>
+          <li><a href="calendario.html">Calendario</a></li>
           <li><a href="tabellone.html">Tabellone</a></li>
           <li><a href="coppie.html">Coppie</a></li>
           <li><a href="regolamento.html" class="attivo">Regolamento</a></li>
@@ -27,47 +29,171 @@
   </header>
 
   <main>
-    <section class="container" style="max-width: 800px;">
+    <section class="container" style="max-width: 820px;">
       <div class="centro" style="margin-bottom: 2rem;">
         <h1>Regolamento</h1>
-        <p class="sottotitolo" style="margin: 0 auto;">L'ufficialità del torneo, chiara e senza sorprese.</p>
+        <p class="sottotitolo" style="margin: 0 auto;">
+          Il regolamento ufficiale del Briscol Champions Cup — chiaro, completo, senza sorprese.
+        </p>
       </div>
 
+      <!-- ============================================================
+           SEZIONE 1 — IL MATCH
+           ============================================================ -->
       <article class="card-regolamento">
-        <h2>🂡 Formato del torneo</h2>
-        <p><strong>Fase a campionato</strong> ("league phase"): 24 coppie, calendario sorteggiato, ogni coppia gioca <strong>8 partite</strong>. Vince chi totalizza più punti (vittoria = 3, pareggio = 1, sconfitta = 0). Passano al tabellone le <strong>prime 16</strong>.</p>
-        <p><strong>Tabellone finale</strong>: incroci di classifica — la 1ª affronta la 16ª, la 2ª la 15ª, e così via. Eliminatorie secche: chi perde esce, chi vince avanza.</p>
+        <h2>🏆 1. Il match</h2>
+        <p>
+          Ogni match si gioca tra <strong>due coppie</strong> (es. Rossi vs Bianchi).
+          <strong>Vince chi conquista per primo il numero di mani previsto dal turno.</strong>
+        </p>
+
+        <table class="tabella tab-mini">
+          <thead>
+            <tr><th>Turno</th><th>Mani per vincere</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Fase a girone unico</td><td>3</td></tr>
+            <tr><td>Playoff (spareggi)</td><td>3</td></tr>
+            <tr><td>Ottavi di finale</td><td>3</td></tr>
+            <tr><td>Quarti di finale</td><td>4</td></tr>
+            <tr><td>Semifinali</td><td>5</td></tr>
+            <tr><td>Finale</td><td>6</td></tr>
+          </tbody>
+        </table>
+
+        <p class="nota-regolamento">
+          💡 Un match non è mai "finito prima": se la coppia arriva a 3 mani su 3, il match è chiuso.
+        </p>
       </article>
 
+      <!-- ============================================================
+           SEZIONE 2 — LA MANO
+           ============================================================ -->
       <article class="card-regolamento">
-        <h2>🂢 La partita: le mani</h2>
-        <p>Ogni partita si gioca a <strong>mani</strong>. Ogni mano è composta da <strong>2 sfide a 120 punti</strong>:</p>
+        <h2>🃏 2. La mano</h2>
+        <p>
+          Ogni mano si gioca attraverso <strong>due sfide</strong>, ciascuna con <strong>120 punti in palio</strong>.
+        </p>
+        <p>
+          <strong>Non si vince la mano vincendo una singola sfida:</strong> si sommano i punti totalizzati
+          da ciascuna coppia nelle due sfide e chi ha il <strong>totale più alto</strong> vince la mano.
+        </p>
+
+        <h3 class="titolo-mini">La singola sfida</h3>
         <ul>
-          <li>Se una coppia vince entrambe le sfide → si aggiudica la mano.</li>
-          <li>Se le sfide finiscono in parità (1 a 1) → <strong>spareggio</strong>: una sfida unica, chi supera i 60 punti vince la mano.</li>
+          <li>Si gioca con mazzo da 40 carte napoletane, 120 punti totali in palio.</li>
+          <li>Chi totalizza <strong>61+ punti</strong> vince la sfida.</li>
+          <li>In caso di <strong>60-60</strong> (parità perfetta), la sfida si <strong>rigioca</strong>.</li>
         </ul>
-        <p>Mani necessarie per vincere la partita:</p>
-        <table class="tabella tab-mini" style="width: auto; max-width: 100%; table-layout: auto;">
-        <thead>
-          <tr>
-            <th style="text-align: left; padding-right: 12px;">Turno</th>
-            <th style="text-align: center; padding-left: 12px;">Mani</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td style="text-align: left; padding-right: 12px;">Fase a campionato</td><td style="text-align: center; padding-left: 12px;">3</td></tr>
-          <tr><td style="text-align: left; padding-right: 12px;">Sedicesimi di finale</td><td style="text-align: center; padding-left: 12px;">3</td></tr>
-          <tr><td style="text-align: left; padding-right: 12px;">Ottavi di finale</td><td style="text-align: center; padding-left: 12px;">3</td></tr>
-          <tr><td style="text-align: left; padding-right: 12px;">Quarti di finale</td><td style="text-align: center; padding-left: 12px;">4</td></tr>
-          <tr><td style="text-align: left; padding-right: 12px;">Semifinali</td><td style="text-align: center; padding-left: 12px;">5</td></tr>
-          <tr><td style="text-align: left; padding-right: 12px;">Finale</td><td style="text-align: center; padding-left: 12px;">6</td></tr>
-        </tbody>
-      </table>
+
+        <h3 class="titolo-mini">Esempio pratico di una mano</h3>
+        <div class="esempio-mano">
+          <div class="riga-sfida">
+            <span class="etichetta">Sfida 1</span>
+            <span class="punteggio"><strong class="rosso">Rossi 75</strong> – <strong>45 Bianchi</strong></span>
+          </div>
+          <div class="riga-sfida">
+            <span class="etichetta">Sfida 2</span>
+            <span class="punteggio"><strong class="rosso">Rossi 46</strong> – <strong>74 Bianchi</strong></span>
+          </div>
+          <div class="riga-totale">
+            <span class="etichetta">Totale</span>
+            <span class="punteggio"><strong class="rosso">Rossi 121</strong> – <strong>119 Bianchi</strong></span>
+          </div>
+          <p class="esito">✅ Vince la mano: <strong class="oro">Rossi</strong> (121 &gt; 119)</p>
+        </div>
+
+        <p class="nota-regolamento">
+          💡 Attenzione: anche se nella sfida 2 vince Bianchi (74 &gt; 46), il totale pende dalla parte di Rossi
+          perché nella sfida 1 aveva accumulato un margine maggiore.
+        </p>
       </article>
 
+      <!-- ============================================================
+           SEZIONE 3 — LA BELLA
+           ============================================================ -->
       <article class="card-regolamento">
-        <h2>🂣 Classifica e spareggi</h2>
-        <p>In caso di parità di punti nella fase a campionato, valgono in ordine:</p>
+        <h2>⚔️ 3. La bella</h2>
+        <p>
+          La bella si gioca <strong>solo quando la somma delle due sfide è esattamente 120-120</strong>.
+        </p>
+        <p>
+          In quel caso nessuna delle due coppie si aggiudica la mano con il totale, e si procede
+          con una <strong>sfida unica e decisiva</strong>.
+        </p>
+
+        <h3 class="titolo-mini">Esempio</h3>
+        <div class="esempio-mano">
+          <div class="riga-sfida">
+            <span class="etichetta">Sfida 1</span>
+            <span class="punteggio"><strong class="rosso">Rossi 75</strong> – <strong>45 Bianchi</strong></span>
+          </div>
+          <div class="riga-sfida">
+            <span class="etichetta">Sfida 2</span>
+            <span class="punteggio"><strong class="rosso">Rossi 45</strong> – <strong>75 Bianchi</strong></span>
+          </div>
+          <div class="riga-totale">
+            <span class="etichetta">Totale</span>
+            <span class="punteggio"><strong>Rossi 120</strong> – <strong>120 Bianchi</strong></span>
+          </div>
+          <p class="esito">⚔️ 120-120 → si va alla <strong class="oro">BELLA</strong></p>
+        </div>
+
+        <h3 class="titolo-mini">Regole della bella</h3>
+        <ul>
+          <li>È una <strong>sfida secca</strong> con 120 punti in palio.</li>
+          <li>Vince chi totalizza <strong>61+ punti</strong>.</li>
+          <li>In caso di <strong>60-60</strong>, si <strong>rigioca</strong>.</li>
+          <li>Chi vince la bella <strong>si aggiudica la mano</strong>.</li>
+        </ul>
+      </article>
+
+      <!-- ============================================================
+           SEZIONE 4 — IL FORMATO DEL TORNEO
+           ============================================================ -->
+      <article class="card-regolamento">
+        <h2>🎯 4. Formato del torneo</h2>
+        <p>
+          Il torneo segue il <strong>formato della nuova Champions League</strong>: una classifica unica,
+          con qualificazioni dirette e playoff.
+        </p>
+
+        <h3 class="titolo-mini">Fase a girone unico</h3>
+        <ul>
+          <li>Tutte le coppie iscritte sono inserite in un'<strong>unica classifica</strong>.</li>
+          <li>Ogni coppia gioca un numero di match stabilito dall'organizzazione in base al numero di iscritti.</li>
+          <li>Vittoria = <strong>3 punti</strong> · Sconfitta = <strong>0 punti</strong> (nessun pareggio).</li>
+        </ul>
+
+        <h3 class="titolo-mini">Qualificazioni</h3>
+        <ul>
+          <li>Le <strong>prime 8</strong> coppie della classifica accedono <strong>direttamente agli ottavi</strong>.</li>
+          <li>Le coppie dalla <strong>9ª alla 24ª</strong> disputano i <strong>playoff</strong> (spareggi), con incroci <em>9ª vs 24ª, 10ª vs 23ª, …, 16ª vs 17ª</em>.</li>
+          <li>Le coppie <strong>oltre la 24ª</strong> sono eliminate.</li>
+        </ul>
+
+        <p class="nota-regolamento">
+          💡 Il numero di giornate del girone unico viene stabilito dall'organizzazione al momento della
+          chiusura delle iscrizioni, in base al numero di coppie effettive.
+        </p>
+
+        <h3 class="titolo-mini">Playoff e tabellone finale</h3>
+        <ul>
+          <li><strong>Playoff</strong>: sfide secche 9ª vs 24ª, 10ª vs 23ª, ecc. — chi vince va agli ottavi.</li>
+          <li><strong>Tabellone finale</strong>: eliminazione diretta, sola andata.</li>
+          <li>Turni: Ottavi (3 mani) → Quarti (4 mani) → Semifinali (5 mani) → Finale (6 mani).</li>
+        </ul>
+      </article>
+
+      <!-- ============================================================
+           SEZIONE 5 — CLASSIFICA E SPAREGGI
+           ============================================================ -->
+      <article class="card-regolamento">
+        <h2>📊 5. Classifica e spareggi</h2>
+        <p>
+          Nella fase a girone unico la classifica è determinata dai <strong>punti vittoria</strong>.
+          In caso di parità, valgono nell'ordine:
+        </p>
         <ol>
           <li>Differenza mani (mani vinte meno mani perse)</li>
           <li>Scontro diretto</li>
@@ -76,15 +202,19 @@
         </ol>
       </article>
 
+      <!-- ============================================================
+           SEZIONE 6 — COMPORTAMENTO
+           ============================================================ -->
       <article class="card-regolamento">
-        <h2>🂤 Comportamento ai tavoli</h2>
+        <h2>🤝 6. Comportamento ai tavoli</h2>
         <ul>
-          <li>Rispetto tra avversari e verso l'arbitro/organizzazione: è un torneo, ma prima di tutto un gioco.</li>
-          <li>Mischiare e fare il morto correttamente spetta alla coppia di casa, salvo accordo diverso.</li>
-          <li>Reclami solo prima della fine della mano successiva a quella contestata.</li>
+          <li>Rispetto tra avversari e verso l'organizzazione: è un torneo, ma prima di tutto un gioco.</li>
+          <li>Mischiare e fare il morto spetta alla coppia di casa, salvo accordo diverso.</li>
+          <li>Reclami ammessi solo prima della fine della mano successiva a quella contestata.</li>
           <li>In caso di comportamento scorretto, l'organizzazione può assegnare la mano a tavolino.</li>
         </ul>
       </article>
+
     </section>
   </main>
 
@@ -93,5 +223,6 @@
       <p>Briscol Champions Cup · Torneo di Briscola Napoletana · Edizione 2026</p>
     </div>
   </footer>
+
 </body>
 </html>

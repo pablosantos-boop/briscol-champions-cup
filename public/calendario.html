@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Calendario — Briscol Champions Cup</title>
+  <meta name="description" content="Tutte le sfide del Briscol Champions Cup: giorni, orari, fasi e risultati.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">Briscol Champions Cup</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Classifica</a></li>
+          <li><a href="partite.html">Partite</a></li>
+          <li><a href="calendario.html" class="attivo">Calendario</a></li>
+          <li><a href="tabellone.html">Tabellone</a></li>
+          <li><a href="coppie.html">Coppie</a></li>
+          <li><a href="regolamento.html">Regolamento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+
+      <!-- Vista LISTA GIORNI -->
+      <div id="vista-lista">
+        <div class="centro" style="margin-bottom: 2rem;">
+          <span class="badge-live" id="badge-live">Aggiornato in tempo reale</span>
+          <h1 style="margin-top: 1rem;">Calendario</h1>
+          <p class="sottotitolo" style="margin: 0 auto;">
+            Tutti i giorni di gara del torneo. Clicca su un giorno per vedere le sfide in dettaglio.
+          </p>
+        </div>
+
+        <div id="lista-giorni">
+          <p class="centro" style="opacity:.6; padding: 3rem 0;">🃏 Caricamento calendario…</p>
+        </div>
+      </div>
+
+      <!-- Vista DETTAGLIO GIORNO -->
+      <div id="vista-dettaglio" class="nascosto">
+        <div style="margin-bottom: 1.5rem;">
+          <button class="btn btn-ghost" id="btn-indietro">← Tutti i giorni</button>
+        </div>
+        <div id="dettaglio-giorno"></div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Briscol Champions Cup · Torneo di Briscola Napoletana · Edizione 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/dati.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/calendario.js"></script>
+  <script src="js/poll.js"></script>
+  <script>
+    async function aggiorna() {
+      const stato = await API.getState();
+      if (!stato) return;
+      Calendario.render(stato);
+      const ora = new Date();
+      document.getElementById('badge-live').textContent =
+        'Dati live · aggiornato alle ' +
+        ora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    }
+    aggiorna();
+    Poll.avvia(aggiorna, 30000);
+  </script>
+</body>
+</html>

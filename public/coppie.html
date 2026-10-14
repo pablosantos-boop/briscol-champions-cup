@@ -44,14 +44,17 @@
     </div>
   </footer>
 
-  <script src="js/dati.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/render.js"></script>
-  <script>
-    (async function () {
-      const stato = await API.getState();
-      if (stato) renderCoppie(stato, document.getElementById('griglia-coppie'));
-    })();
-  </script>
+   <script src="js/dati.js"></script>
+   <script src="js/api.js"></script>
+   <script src="js/render.js"></script>
+   <script src="js/poll.js"></script>
+   <script>
+     async function aggiorna() {
+       const stato = await API.getState();
+       if (stato) renderCoppie(stato,  document.getElementById('griglia-coppie'));
+     }
+     aggiorna();
+     Poll.avvia(aggiorna, 30000);
+   </script>
 </body>
 </html>
