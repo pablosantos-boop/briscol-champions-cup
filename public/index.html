@@ -7,6 +7,13 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
     netlifyIdentity.init();
+
+    // Quando l'utente è loggato (dopo aver completato l'invito o aver fatto login),
+    // chiudi il widget e manda alla dashboard admin.
+    netlifyIdentity.on('login', () => {
+      netlifyIdentity.close();
+      window.location.href = '/admin/dashboard.html';
+    });
   </script>
   <meta name="description" content="Il torneo di Briscola Napoletana in stile Champions League. Classifica, risultati e tabellone in tempo reale.">
 
