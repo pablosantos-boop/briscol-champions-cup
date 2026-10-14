@@ -189,8 +189,20 @@
         document.getElementById('avviso').innerHTML =
           '<span class="badge-dev">⚠ Modalità sviluppo — login disattivato, salvataggi simulati</span>';
       } else {
-        const user = netlifyIdentity.currentUser();
-        if (!user) { window.location.href = 'index.html'; return; }
+        // Aspetta che il widget abbia finito di leggere il token
+        netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.location.href = 'index.html';
+          } else {
+            avviaDashboard();
+          }
+        });
+        // Fallback: se dopo 1.5s ancora non è pronto, vai al login
+        setTimeout(() => {
+          if (!netlifyIdentity.currentUser()) {
+            window.location.href = 'index.html';
+          }
+        }, 1500);
       }
       stato = await API.getState();
       if (stato) disegna();
