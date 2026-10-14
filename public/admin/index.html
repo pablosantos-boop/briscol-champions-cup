@@ -44,14 +44,16 @@
   <script>
     netlifyIdentity.init();
 
-    netlifyIdentity.on('login', () => {
-      netlifyIdentity.close();
-      window.location.href = 'dashboard.html';
-    });
+    function vaiInDashboard() {
+      if (netlifyIdentity.currentUser()) {
+        netlifyIdentity.close();
+        window.location.href = 'dashboard.html';
+      }
+    }
 
-    netlifyIdentity.on('init', (user) => {
-      if (user) window.location.href = 'dashboard.html';
-    });
+    netlifyIdentity.on('init', vaiInDashboard);
+    netlifyIdentity.on('login', vaiInDashboard);
+    setTimeout(vaiInDashboard, 300);
 
     document.getElementById('btn-login').addEventListener('click', () => {
       netlifyIdentity.open('login');
