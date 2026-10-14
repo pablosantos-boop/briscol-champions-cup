@@ -2,17 +2,51 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Dashboard Admin — Briscol Champions Cup</title>
   <meta name="robots" content="noindex">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-
   <style>
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-bottom: 1.5rem;
+    }
+    .admin-header h1 {
+      margin: 0;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+    }
+    .admin-user {
+      font-size: .78rem;
+      opacity: .75;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+    }
+    .admin-user button {
+      background: rgba(231,76,60,.15);
+      border: 1px solid rgba(231,76,60,.5);
+      color: #ffb3ab;
+      border-radius: 999px;
+      padding: .35rem .9rem;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+    }
     .admin-section { margin-bottom: 2.5rem; }
+    .admin-section h2 {
+      font-size: 1.05rem;
+      margin-bottom: .9rem;
+      color: var(--oro);
+    }
     .admin-partita {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -24,10 +58,21 @@
       padding: .9rem 1.2rem;
       margin-bottom: .7rem;
     }
-    .admin-partita .squadra strong { display: block; font-size: .95rem; }
-    .admin-partita .squadra span { font-size: .72rem; opacity: .6; }
+    .admin-partita .squadra strong { display: block; font-size: .9rem; }
+    .admin-partita .squadra span { font-size: .7rem; opacity: .6; }
     .admin-partita .squadra.destra { text-align: right; }
-    .admin-form { display: flex; gap: .4rem; align-items: center; justify-content: center; }
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      align-items: center;
+    }
+    .admin-form-row {
+      display: flex;
+      gap: .4rem;
+      align-items: center;
+      justify-content: center;
+    }
     .admin-form input {
       width: 58px;
       padding: .45rem .3rem;
@@ -41,8 +86,16 @@
       border-radius: 8px;
     }
     .admin-form input:focus { outline: none; border-color: var(--oro); }
-    .admin-form .lbl { font-size: .62rem; text-transform: uppercase; opacity: .6; display: block; text-align: center; }
-    .btn-salva { padding: .45rem 1rem; font-size: .75rem; }
+    .admin-form .lbl {
+      font-size: .62rem;
+      text-transform: uppercase;
+      opacity: .6;
+      display: block;
+      text-align: center;
+      letter-spacing: .08em;
+      margin-bottom: .15rem;
+    }
+    .btn-salva { padding: .5rem 1.1rem; font-size: .75rem; }
     .messaggio {
       padding: .8rem 1.2rem;
       border-radius: var(--raggio);
@@ -56,7 +109,10 @@
       color: #ffb3ab; border-radius: 999px; padding: .2rem .9rem; font-size: .72rem;
       margin-bottom: 1rem; letter-spacing: .1em; text-transform: uppercase;
     }
-    @media (max-width: 640px) { .admin-partita { grid-template-columns: 1fr; text-align: center; } .admin-partita .squadra.destra { text-align: center; } }
+    @media (max-width: 640px) {
+      .admin-partita { grid-template-columns: 1fr; text-align: center; }
+      .admin-partita .squadra.destra { text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -64,71 +120,92 @@
   <header>
     <div class="container">
       <a href="../index.html" class="logo">Briscol Champions Cup</a>
-      <nav>
-        <ul>
-          <li><a href="index.html" onclick="netlifyIdentity && netlifyIdentity.logout(); return false;">Esci ➜</a></li>
-        </ul>
-      </nav>
     </div>
   </header>
 
   <main class="container">
-    <h1 style="margin-bottom: 1.5rem;">Dashboard Admin</h1>
+    <div class="admin-header">
+      <h1>Dashboard Admin</h1>
+      <div class="admin-user">
+        <span id="admin-email"></span>
+        <button id="btn-logout">Esci</button>
+      </div>
+    </div>
     <div id="avviso"></div>
-    <div id="contenuto-admin"></div>
+    <div id="contenuto-admin">
+      <p class="centro" style="opacity:.6; padding: 2rem 0;">Caricamento…</p>
+    </div>
   </main>
 
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<script src="../js/dati.js"></script>
-<script src="../js/api.js"></script>
-<script>
-  netlifyIdentity.init();   // ← QUESTA RIGA MANCAVA — la chiave del problema!
-  netlifyIdentity.on('logout', () => {
-    window.location.href = 'index.html';
-  });
-
-    /* Modalità sviluppo: in locale (file o localhost) salta il login
-       e i salvataggi sono simulati. ONLINE il login è obbligatorio. */
+  <script src="../js/dati.js"></script>
+  <script src="../js/api.js"></script>
+  <script>
+    // ============================================================
+    // SETUP
+    // ============================================================
     const DEV = location.protocol === 'file:' ||
                 ['localhost', '127.0.0.1'].includes(location.hostname);
 
     let stato = null;
+
+    netlifyIdentity.init();
 
     function avviso(testo, tipo) {
       document.getElementById('avviso').innerHTML =
         testo ? `<div class="messaggio ${tipo}">${testo}</div>` : '';
     }
 
+    function logout() {
+      netlifyIdentity.logout();
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', logout);
+    netlifyIdentity.on('logout', () => {
+      window.location.href = 'index.html';
+    });
+
+    // ============================================================
+    // SALVA RISULTATO
+    // ============================================================
     async function salvaRisultato(id, payload) {
       if (DEV) {
-        // Simulazione locale: aggiorno lo stato in memoria e ridisegno
         const pt = stato.partite_league.find(p => p.id === id);
         Object.assign(pt, payload, { giocata: true });
         pt.vincitore = pt.mani_casa > pt.mani_ospite ? pt.casa : pt.ospite;
-        localStorage.setItem('bcc_stato', JSON.stringify(stato));  // ← AGGIUNGI QUESTA
-        avviso('💾 Modalità sviluppo: risultato salvato SOLO in locale (al refresh si perde).', 'ok');
+        localStorage.setItem('bcc_stato', JSON.stringify(stato));
+        avviso('💾 Modalità sviluppo: salvato solo in locale.', 'ok');
         disegna();
         return;
       }
+
       const user = netlifyIdentity.currentUser();
-      if (!user) { window.location.href = 'index.html'; return; }
+      if (!user) { logout(); return; }
       const token = await user.jwt();
 
-      const res = await fetch('/.netlify/functions/save-result', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify({ id, ...payload })
-      });
-      const dati = await res.json();
-      if (!res.ok) { avviso('❌ ' + dati.errore, 'errore'); return; }
-      stato = dati.stato;
-      avviso('✅ Risultato pubblicato! Il sito si aggiorna entro 30 secondi.', 'ok');
-      disegna();
+      try {
+        const res = await fetch('/.netlify/functions/save-result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ id, ...payload })
+        });
+        const dati = await res.json();
+        if (!res.ok) { avviso('❌ ' + (dati.errore || 'Errore'), 'errore'); return; }
+        stato = dati.stato;
+        avviso('✅ Risultato pubblicato! Il sito si aggiorna entro 30 secondi.', 'ok');
+        disegna();
+      } catch (e) {
+        avviso('❌ Errore di rete: ' + e.message, 'errore');
+      }
     }
 
+    // ============================================================
+    // DISEGNA DASHBOARD
+    // ============================================================
     function disegna() {
       const map = {};
       stato.coppie.forEach(c => map[c.id] = c);
@@ -137,33 +214,44 @@
       let html = '';
       for (let g = 1; g <= 8; g++) {
         const partite = stato.partite_league.filter(p => p.giornata === g);
+        if (!partite.length) continue;
         html += `<div class="admin-section"><h2>Giornata ${g}</h2>`;
         partite.forEach(pt => {
           const casa = map[pt.casa], osp = map[pt.ospite];
-          const mc = pt.giocata ? pt.mani_casa : '', mo = pt.giocata ? pt.mani_ospite : '';
-          const pc = pt.giocata ? pt.punti_casa : '', po = pt.giocata ? pt.punti_ospite : '';
+          const mc = pt.giocata ? pt.mani_casa : '';
+          const mo = pt.giocata ? pt.mani_ospite : '';
+          const pc = pt.giocata ? pt.punti_casa : '';
+          const po = pt.giocata ? pt.punti_ospite : '';
           html += `
           <div class="admin-partita" data-id="${pt.id}">
             <div class="squadra">
               <strong>${casa.nome_coppia}</strong>
-              <span>${casa.giocatore1} & ${casa.giocatore2}</span>
+              <span>${casa.giocatore1} &amp; ${casa.giocatore2}</span>
             </div>
             <form class="admin-form">
-              <div><span class="lbl">Mani</span>
-                <input type="number" name="mani_casa" min="0" max="3" value="${mc}" required>
-                –
-                <input type="number" name="mani_ospite" min="0" max="3" value="${mo}" required>
+              <div>
+                <span class="lbl">Mani</span>
+                <div class="admin-form-row">
+                  <input type="number" name="mani_casa" min="0" max="6" value="${mc}" required>
+                  <span>–</span>
+                  <input type="number" name="mani_ospite" min="0" max="6" value="${mo}" required>
+                </div>
               </div>
-              <div><span class="lbl">Punti</span>
-                <input type="number" name="punti_casa" min="0" value="${pc}" required>
-                –
-                <input type="number" name="punti_ospite" min="0" value="${po}" required>
+              <div>
+                <span class="lbl">Punti totali</span>
+                <div class="admin-form-row">
+                  <input type="number" name="punti_casa" min="0" value="${pc}" required>
+                  <span>–</span>
+                  <input type="number" name="punti_ospite" min="0" value="${po}" required>
+                </div>
               </div>
-              <button type="submit" class="btn btn-oro btn-salva">${pt.giocata ? 'Aggiorna' : 'Salva'}</button>
+              <button type="submit" class="btn btn-oro btn-salva">
+                ${pt.giocata ? 'Aggiorna' : 'Salva'}
+              </button>
             </form>
             <div class="squadra destra">
               <strong>${osp.nome_coppia}</strong>
-              <span>${osp.giocatore1} & ${osp.giocatore2}</span>
+              <span>${osp.giocatore1} &amp; ${osp.giocatore2}</span>
             </div>
           </div>`;
         });
@@ -177,36 +265,53 @@
           const id = form.closest('.admin-partita').dataset.id;
           const val = n => Number(form.elements[n].value);
           salvaRisultato(id, {
-            mani_casa: val('mani_casa'), mani_ospite: val('mani_ospite'),
-            punti_casa: val('punti_casa'), punti_ospite: val('punti_ospite')
+            mani_casa: val('mani_casa'),
+            mani_ospite: val('mani_ospite'),
+            punti_casa: val('punti_casa'),
+            punti_ospite: val('punti_ospite')
           });
         });
       });
     }
 
-    (async function () {
+    // ============================================================
+    // AVVIO — aspetta che il widget abbia letto la sessione
+    // ============================================================
+    async function avvia() {
       if (DEV) {
         document.getElementById('avviso').innerHTML =
-          '<span class="badge-dev">⚠ Modalità sviluppo — login disattivato, salvataggi simulati</span>';
+          '<span class="badge-dev">⚠ Modalità sviluppo — login disattivato</span>';
+        document.getElementById('admin-email').textContent = 'dev@locale';
       } else {
-        // Aspetta che il widget abbia finito di leggere il token
-        netlifyIdentity.on('init', (user) => {
-          if (!user) {
-            window.location.href = 'index.html';
-          } else {
-            avviaDashboard();
-          }
-        });
-        // Fallback: se dopo 1.5s ancora non è pronto, vai al login
-        setTimeout(() => {
-          if (!netlifyIdentity.currentUser()) {
-            window.location.href = 'index.html';
-          }
-        }, 1500);
+        const user = netlifyIdentity.currentUser();
+        if (!user) {
+          // Non loggato → torna al login
+          window.location.href = 'index.html';
+          return;
+        }
+        document.getElementById('admin-email').textContent = user.email;
       }
+
       stato = await API.getState();
       if (stato) disegna();
-    })();
+      else avviso('❌ Impossibile caricare lo stato del torneo.', 'errore');
+    }
+
+    // Il widget emette 'init' quando ha finito di leggere la sessione
+    if (DEV) {
+      avvia();
+    } else {
+      netlifyIdentity.on('init', (user) => {
+        if (user) avvia();
+        else window.location.href = 'index.html';
+      });
+      // Fallback: se dopo 1.5s 'init' non è scattato, tenta comunque
+      setTimeout(() => {
+        if (!document.getElementById('contenuto-admin').innerHTML.includes('Caricamento')) return;
+        if (netlifyIdentity.currentUser()) avvia();
+        else window.location.href = 'index.html';
+      }, 1500);
+    }
   </script>
 </body>
 </html>
