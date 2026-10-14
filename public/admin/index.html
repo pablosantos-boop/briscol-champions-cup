@@ -40,26 +40,20 @@
     </div>
   </main>
 
-  <!-- 1. Widget Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
   <script>
-    // 2. Inizializza PRIMA di tutto
     netlifyIdentity.init();
 
-    // 3. Gestisci gli eventi
     netlifyIdentity.on('login', () => {
+      netlifyIdentity.close();
       window.location.href = 'dashboard.html';
     });
 
     netlifyIdentity.on('init', (user) => {
-      if (user) {
-        window.location.href = 'dashboard.html';
-      }
+      if (user) window.location.href = 'dashboard.html';
     });
 
-    // 4. Bottone login
-    document.getElementById('btn-login').addEventListener('click', function() {
+    document.getElementById('btn-login').addEventListener('click', () => {
       netlifyIdentity.open('login');
     });
   </script>
