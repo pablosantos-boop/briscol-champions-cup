@@ -23,48 +23,34 @@
       box-shadow: var(--ombra-carta);
     }
     .login-box h1 { font-size: 1.4rem; margin-bottom: .5rem; }
-    .login-box p { font-size: .85rem; opacity: .7; margin-bottom: 1.5rem; }
+    .login-box p  { font-size: .85rem; opacity: .7; margin-bottom: 1.5rem; }
     .netlify-identity-widget { color-scheme: dark; }
 
-    /* Form di accettazione invito */
-    #form-invito {
+    #vista-messaggio {
       display: none;
-      text-align: left;
+      text-align: center;
+      padding: 1rem 0;
     }
-    #form-invito label {
-      display: block;
-      font-size: .8rem;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--oro-chiaro);
-      margin-bottom: .4rem;
-      margin-top: 1rem;
+    #vista-messaggio h2 {
+      color: var(--oro);
+      font-size: 1.2rem;
+      margin-bottom: .6rem;
     }
-    #form-invito input {
-      width: 100%;
-      padding: .8rem 1rem;
-      border-radius: 10px;
-      border: 1px solid rgba(212,175,55,.35);
-      background: rgba(0,0,0,.35);
-      color: var(--crema);
-      font-size: 16px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color .2s ease;
-    }
-    #form-invito input:focus {
-      border-color: var(--oro);
-    }
-    #form-invito button {
-      width: 100%;
-      margin-top: 1.5rem;
-    }
-    .msg-errore {
-      color: #ff7a7a;
+    #vista-messaggio p {
       font-size: .85rem;
-      margin-top: .8rem;
-      min-height: 1.2em;
+      opacity: .8;
+      line-height: 1.6;
     }
+    .spin {
+      display: inline-block;
+      width: 26px; height: 26px;
+      border: 3px solid rgba(212,175,55,.3);
+      border-top-color: var(--oro);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 1rem auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -78,26 +64,16 @@
   <main class="container">
     <div class="login-box">
 
-      <!-- Vista login normale -->
       <div id="vista-login">
         <h1>Area Riservata</h1>
         <p>Solo l'organizzazione può entrare qui. I risultati inseriti si aggiornano sul sito in tempo reale.</p>
         <button class="btn btn-oro" id="btn-login">Accedi come Admin</button>
       </div>
 
-      <!-- Vista accettazione invito -->
-      <div id="form-invito">
-        <h1>Benvenuto! 🃏</h1>
-        <p>Imposta la tua password per attivare l'account admin.</p>
-
-        <label for="pwd1">Password</label>
-        <input type="password" id="pwd1" autocomplete="new-password" minlength="6" placeholder="Almeno 6 caratteri">
-
-        <label for="pwd2">Conferma password</label>
-        <input type="password" id="pwd2" autocomplete="new-password" minlength="6" placeholder="Ripeti la password">
-
-        <button class="btn btn-oro" id="btn-invito">Attiva account</button>
-        <div class="msg-errore" id="msg-errore"></div>
+      <div id="vista-messaggio">
+        <div class="spin"></div>
+        <h2 id="msg-titolo">Attivazione account…</h2>
+        <p id="msg-testo">Completa la procedura nella finestra di Netlify.</p>
       </div>
 
     </div>
@@ -105,88 +81,56 @@
 
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script>
-    // ------------------------------------------------------------
-    // 1. Rileva se c'è un invite_token nell'URL
-    //    Netlify usa l'hash: #invite_token=XXX
-    // ------------------------------------------------------------
-    const hash = window.location.hash;
-    const paramsHash = new URLSearchParams(hash.replace(/^#/, ''));
-    const inviteToken = paramsHash.get('invite_token');
+    // ============================================================
+    // 1. Inizializza il widget (gestisce da solo i token #invite_token)
+    // ============================================================
+    netlifyIdentity.init();
 
     const vistaLogin = document.getElementById('vista-login');
-    const formInvito = document.getElementById('form-invito');
-    const btnLogin = document.getElementById('btn-login');
-    const btnInvito = document.getElementById('btn-invito');
-    const msgErrore = document.getElementById('msg-errore');
+    const vistaMsg   = document.getElementById('vista-messaggio');
 
-    // ------------------------------------------------------------
-    // 2. Se c'è invite_token → mostra il form di attivazione
-    // ------------------------------------------------------------
+    // ============================================================
+    // 2. Se c'è un invite_token → apri il widget in modalità signup
+    //    Il widget Netlify gestisce nativamente questo flusso
+    // ============================================================
+    const hash = window.location.hash;
+    const paramsHash = new URLSearchParams(hash.replace(/^#/, ''));
+    const inviteToken = paramsHash.get('invite_token') || paramsHash.get('confirmation_token');
+
     if (inviteToken) {
       vistaLogin.style.display = 'none';
-      formInvito.style.display = 'block';
+      vistaMsg.style.display   = 'block';
+      document.getElementById('msg-titolo').textContent = 'Benvenuto! 🃏';
+      document.getElementById('msg-testo').textContent  =
+        'Nella finestra che si apre imposta la password. Se non la vedi, clicca di nuovo il bottone sotto.';
 
-      // Inizializza il widget con il token (necessario per completare)
-      netlifyIdentity.init();
-
-      btnInvito.addEventListener('click', async () => {
-        msgErrore.textContent = '';
-
-        const pwd1 = document.getElementById('pwd1').value;
-        const pwd2 = document.getElementById('pwd2').value;
-
-        if (pwd1.length < 6) {
-          msgErrore.textContent = 'La password deve avere almeno 6 caratteri.';
-          return;
-        }
-        if (pwd1 !== pwd2) {
-          msgErrore.textContent = 'Le due password non coincidono.';
-          return;
-        }
-
-        btnInvito.disabled = true;
-        btnInvito.textContent = 'Attivazione…';
-
-        try {
-          const user = netlifyIdentity.currentUser();
-          if (!user) {
-            // Se il widget non ha ancora "letto" il token, lo forziamo
-            netlifyIdentity.open('signup');
-            // Aspettiamo l'evento login
-            netlifyIdentity.once('login', async (u) => {
-              await u.update({ password: pwd1 });
-              window.location.href = 'dashboard.html';
-            });
-            return;
-          }
-
-          await user.update({ password: pwd1 });
+      // Piccolo delay per essere sicuri che il widget abbia letto il token
+      setTimeout(() => {
+        // Se Netlify ha già processato il token, siamo già "logged in"
+        const user = netlifyIdentity.currentUser();
+        if (user) {
           window.location.href = 'dashboard.html';
-        } catch (e) {
-          console.error(e);
-          msgErrore.textContent = 'Errore: ' + (e.message || 'riprova dal link della mail.');
-          btnInvito.disabled = false;
-          btnInvito.textContent = 'Attiva account';
+          return;
         }
-      });
-
-    } else {
-      // ------------------------------------------------------------
-      // 3. Login normale (nessun token nell'URL)
-      // ------------------------------------------------------------
-      netlifyIdentity.on('init', user => {
-        if (user) window.location.href = 'dashboard.html';
-      });
-      netlifyIdentity.on('login', () => {
-        window.location.href = 'dashboard.html';
-      });
-
-      btnLogin.addEventListener('click', () => {
-        netlifyIdentity.open('login');
-      });
-
-      netlifyIdentity.init();
+        // Altrimenti apriamo il widget che mostrerà il form di signup
+        netlifyIdentity.open('signup');
+      }, 400);
     }
+
+    // ============================================================
+    // 3. Login normale (nessun token nell'URL)
+    // ============================================================
+    netlifyIdentity.on('init', user => {
+      if (user && !inviteToken) window.location.href = 'dashboard.html';
+    });
+
+    netlifyIdentity.on('login', () => {
+      window.location.href = 'dashboard.html';
+    });
+
+    document.getElementById('btn-login').addEventListener('click', () => {
+      netlifyIdentity.open('login');
+    });
   </script>
 </body>
 </html>
