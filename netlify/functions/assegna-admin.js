@@ -9,7 +9,7 @@ exports.handler = async (event, context) => {
 
   // 2. Solo TU puoi chiamarla (se l'email corrisponde alla tua)
   // ⚠️ SOSTITUISCI con la tua email vera
-  const TUA_EMAIL = 'vxxxxx.xxx@xxx.it'; // ← METTI LA TUA EMAIL QUI
+  const TUA_EMAIL = 'vincenzo.amarante@istitutovalfieri.edu.it'; // ← METTI LA TUA EMAIL QUI
   
   if (user.email !== TUA_EMAIL) {
     return { statusCode: 403, body: JSON.stringify({ errore: 'Non sei autorizzato' }) };
