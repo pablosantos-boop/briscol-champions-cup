@@ -302,8 +302,13 @@
       avvia();
     } else {
       netlifyIdentity.on('init', (user) => {
-        if (user) avvia();
-        else window.location.href = 'index.html';
+        if (!user) { window.location.href = 'index.html'; return; }
+        const roles = user.app_metadata?.roles || [];
+        if (!roles.includes('admin')) {
+          window.location.href = 'index.html';
+          return;
+        }
+        avvia();
       });
       // Fallback: se dopo 1.5s 'init' non è scattato, tenta comunque
       setTimeout(() => {
