@@ -7,10 +7,14 @@ const { getStore } = require('@netlify/blobs');
 const seed = require('../../public/js/dati.js');
 
 exports.handler = async (event) => {
-  // --- 1. Solo utenti loggati tramite Netlify Identity ---
-  const user = event.context && event.context.clientContext && event.context.clientContext.user;
+  const user = event.context?.clientContext?.user;
   if (!user) {
     return { statusCode: 401, body: JSON.stringify({ errore: 'Non autorizzato' }) };
+  }
+  // Verifica del ruolo
+  const roles = user.app_metadata?.roles || [];
+  if (!roles.includes('admin')) {
+    return { statusCode: 403, body: JSON.stringify({ errore: 'Solo admin' }) };
   }
 
   // --- 2. Leggi e valida l'input ---
