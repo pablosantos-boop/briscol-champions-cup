@@ -151,17 +151,26 @@
 
     netlifyIdentity.init();
 
-    function avviso(testo, tipo) {
-      document.getElementById('avviso').innerHTML =
-        testo ? `<div class="messaggio ${tipo}">${testo}</div>` : '';
-    }
+    // ============================================================
+    // FIX 1: Chiudi il widget dopo il login (evita overlay che blocca i click)
+    // ============================================================
+    netlifyIdentity.on('login', () => {
+      netlifyIdentity.close();
+    });
 
+    // ============================================================
+    // FIX 2: Logout pulito (cancella cookie + localStorage + redirect)
+    // ============================================================
     function logout() {
       netlifyIdentity.logout();
+      // Cancella manualmente il cookie nf_jwt
+      document.cookie = 'nf_jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'nf_refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       window.location.href = 'index.html';
     }
 
     document.getElementById('btn-logout').addEventListener('click', logout);
+
     netlifyIdentity.on('logout', () => {
       window.location.href = 'index.html';
     });
@@ -169,6 +178,11 @@
     // ============================================================
     // SALVA RISULTATO
     // ============================================================
+    function avviso(testo, tipo) {
+      document.getElementById('avviso').innerHTML =
+        testo ? `<div class="messaggio ${tipo}">${testo}</div>` : '';
+    }
+
     async function salvaRisultato(id, payload) {
       if (DEV) {
         const pt = stato.partite_league.find(p => p.id === id);
@@ -196,7 +210,7 @@
         const dati = await res.json();
         if (!res.ok) { avviso('❌ ' + (dati.errore || 'Errore'), 'errore'); return; }
         stato = dati.stato;
-        avviso('✅ Risultato pubblicato! Il sito si aggiorna entro 30 secondi.', 'ok');
+        avviso('✅ Risultato pubblicato!', 'ok');
         disegna();
       } catch (e) {
         avviso('❌ Errore di rete: ' + e.message, 'errore');
@@ -275,42 +289,31 @@
     }
 
     // ============================================================
-    // AVVIO — aspetta che il widget abbia letto la sessione
+    // AVVIO
     // ============================================================
     async function avvia() {
       if (DEV) {
         document.getElementById('avviso').innerHTML =
-          '<span class="badge-dev">⚠ Modalità sviluppo — login disattivato</span>';
+          '<span class="badge-dev">⚠ Modalità sviluppo</span>';
         document.getElementById('admin-email').textContent = 'dev@locale';
       } else {
         const user = netlifyIdentity.currentUser();
-        if (!user) {
-          // Non loggato → torna al login
-          window.location.href = 'index.html';
-          return;
-        }
+        if (!user) { window.location.href = 'index.html'; return; }
         document.getElementById('admin-email').textContent = user.email;
       }
 
       stato = await API.getState();
       if (stato) disegna();
-      else avviso('❌ Impossibile caricare lo stato del torneo.', 'errore');
-    }
+      else avviso('❌ Impossibile caricare lo stato.', 'errore');
+   }
 
-    // Il widget emette 'init' quando ha finito di leggere la sessione
     if (DEV) {
       avvia();
     } else {
       netlifyIdentity.on('init', (user) => {
-        if (!user) { window.location.href = 'index.html'; return; }
-        const roles = user.app_metadata?.roles || [];
-        if (!roles.includes('admin')) {
-          window.location.href = 'index.html';
-          return;
-        }
-        avvia();
+        if (user) avvia();
+        else window.location.href = 'index.html';
       });
-      // Fallback: se dopo 1.5s 'init' non è scattato, tenta comunque
       setTimeout(() => {
         if (!document.getElementById('contenuto-admin').innerHTML.includes('Caricamento')) return;
         if (netlifyIdentity.currentUser()) avvia();
